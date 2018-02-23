@@ -9,8 +9,6 @@ Quick links: [Using](#using) | [Installing](#installing) | [Contributing](#contr
 
 ## Using
 
-Make sure WP-CLI is installed on the remote server and you have SSH access.
-
 Create a wp-cli.local.yml file in your local WordPress project.
 
 Example:
@@ -37,7 +35,10 @@ Use the --force attribute to bypass the confirmation prompt.
 
 ## Installing
 
-Installing this package requires WP-CLI v1.1.0 or greater. Update to the latest stable release with `wp cli update`.
+Make sure WP-CLI is installed on the remote server and you have SSH access.  
+Rsync needs to be installed to transfer the uploads folder.
+
+Installing this package requires WP-CLI v1.5.0 or greater. Update to the latest stable release with `wp cli update`.
 
 Once you've done so, you can install this package with:
 
