@@ -1,5 +1,5 @@
-maneuver-agency/sync
-====================
+maneuver-agency/wp-cli-sync
+===========================
 
 
 
@@ -9,7 +9,31 @@ Quick links: [Using](#using) | [Installing](#installing) | [Contributing](#contr
 
 ## Using
 
+Make sure WP-CLI is installed on the remote server and you have SSH access.
 
+Create a wp-cli.local.yml file in your local WordPress project.
+
+Example:
+
+    url: http://example.local.dev
+
+    @staging:
+      ssh: root@<ip>/path/to/staging/wp-root
+      url: http://staging.example.com
+
+    @production:
+      ssh: root@<ip>/path/to/production/wp-root
+      url: https://www.example.com
+
+Now you can sync your local development environment with one of the defined environments:
+
+    wp sync --env=staging
+
+or
+
+    wp sync --env=production
+
+Use the --force attribute to bypass the confirmation prompt.
 
 ## Installing
 
