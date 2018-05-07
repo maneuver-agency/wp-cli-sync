@@ -38,11 +38,11 @@ $do_sync = function($args, $assoc_args) {
 
   // Export DB on remote server.
   WP_CLI::log('- Exporting database.');
-  WP_CLI::runcommand("$env db export - > $sqlfile");
+  WP_CLI::runcommand("$env db export - > \"$sqlfile\"");
 
   // Import into local DB
   WP_CLI::log('- Importing database.');
-  WP_CLI::runcommand("db import $sqlfile");
+  WP_CLI::runcommand("db import \"$sqlfile\"");
   
   // Search and replace domains
   if ($remotedomain && $localdomain) {
@@ -61,7 +61,7 @@ $do_sync = function($args, $assoc_args) {
   // rsync needs a fully qualified remote path with a colon before the path.
   $ssh = preg_replace('/\//', ':/', $ssh, 1);
 
-  $cmd = "rsync -av --delete $ssh/$upload_rel_path/ $upload_full_path";
+  $cmd = "rsync -av --delete $ssh/$upload_rel_path/ \"$upload_full_path\"";
   
   // Transfer all uploaded files
   WP_CLI::log('- Transfering uploads folder.');
