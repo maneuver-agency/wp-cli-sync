@@ -38,7 +38,7 @@ $do_sync = function($args, $assoc_args) {
 
   // Export DB on remote server.
   WP_CLI::log('- Exporting database.');
-  WP_CLI::runcommand("$env db export - > \"$sqlfile\"");
+  WP_CLI::runcommand("$env db export --exclude_tables=wp_users,wp_usermeta - > \"$sqlfile\"");
 
   // Import into local DB
   WP_CLI::log('- Importing database.');
@@ -49,6 +49,10 @@ $do_sync = function($args, $assoc_args) {
     WP_CLI::log('- Replacing domains.');
     WP_CLI::runcommand("search-replace $remotedomain $localdomain --no-report");
   }
+
+  // Remove Ninja Forms personal data
+  WP_CLI::log('- Removing Ninja Forms submissions.');
+  WP_CLI::runcommand("db query 'delete from wp_postmeta where post_id in (select id from wp_posts where post_type = \"nf_sub\");delete from wp_posts where post_type = \"nf_sub\";'");
   
   // Remove dump file
   unlink($sqlfile);
