@@ -1,9 +1,7 @@
 maneuver-agency/wp-cli-sync
 ===========================
 
-
-
-[![Build Status](https://travis-ci.org/maneuver-agency/sync.svg?branch=master)](https://travis-ci.org/maneuver-agency/sync)
+Will copy database (ignores Ninja Forms input data) and uploaded files.
 
 Quick links: [Using](#using) | [Installing](#installing) | [Contributing](#contributing) | [Support](#support)
 
