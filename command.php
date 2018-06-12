@@ -36,9 +36,17 @@ $do_sync = function($args, $assoc_args) {
     WP_CLI::confirm("Local domain is $localdomain. Remote domain is $remotedomain. Continue?");
   }
 
+  // Generate table names with the correct prefix.
+  // @NOTE: Remote and local prefix should match!!!
+  $dbprefix = WP_CLI::runcommand('db prefix', ['return' => true]);
+  $table_users = $dbprefix . 'users';
+  $table_usermeta = $dbprefix . 'usermeta';
+  $table_posts = $dbprefix . 'posts';
+  $table_postmeta = $dbprefix . 'postmeta';
+
   // Export DB on remote server.
   WP_CLI::log('- Exporting database.');
-  WP_CLI::runcommand("$env db export --exclude_tables=wp_users,wp_usermeta - > \"$sqlfile\"");
+  WP_CLI::runcommand("$env db export --exclude_tables={$table_users},{$table_usermeta} - > \"$sqlfile\"");
 
   // Import into local DB
   WP_CLI::log('- Importing database.');
@@ -52,7 +60,7 @@ $do_sync = function($args, $assoc_args) {
 
   // Remove Ninja Forms personal data
   WP_CLI::log('- Removing Ninja Forms submissions.');
-  WP_CLI::runcommand("db query 'delete from wp_postmeta where post_id in (select id from wp_posts where post_type = \"nf_sub\");delete from wp_posts where post_type = \"nf_sub\";'");
+  WP_CLI::runcommand("db query 'delete from {$table_postmeta} where post_id in (select id from {$table_posts} where post_type = \"nf_sub\");delete from {$table_posts} where post_type = \"nf_sub\";'");
   
   // Remove dump file
   unlink($sqlfile);
