@@ -67,7 +67,7 @@ $do_sync = function($args, $assoc_args) {
 
   $ssh = rtrim($aliasses[$env]['ssh'], '/');
   $uploads = wp_upload_dir();
-  $upload_full_path = $uploads['path'];
+  $upload_full_path = $uploads['basedir'];
   $upload_rel_path = trim($uploads['relative'], '/');
 
   // rsync needs a fully qualified remote path with a colon before the path.
