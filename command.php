@@ -45,6 +45,10 @@ $do_sync = function($args, $assoc_args) {
   $table_postmeta = $dbprefix . 'postmeta';
 
   // Export DB on remote server.
+  WP_CLI::log('- Deleting transients.');
+  WP_CLI::runcommand("$env transient delete --all");
+
+  // Export DB on remote server.
   WP_CLI::log('- Exporting database.');
   WP_CLI::runcommand("$env db export --exclude_tables={$table_users},{$table_usermeta} - > \"$sqlfile\"");
 
