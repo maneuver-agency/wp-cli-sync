@@ -5,13 +5,15 @@ if ( ! class_exists( 'WP_CLI' ) ) {
 }
 
 /**
- * Syncs a remote WP install with the local installation.
+ * Syncs a local WP install with a remote installation.
  *
  * @when after_wp_load
  */
 $do_sync = function($args, $assoc_args) {
 
   $env = WP_CLI\Utils\get_flag_value($assoc_args, 'env');
+  $sync_uploads = WP_CLI\Utils\get_flag_value($assoc_args, 'uploads', true);
+
   $cwd = getcwd();
   $sqlfile = $cwd . '/sync.sql';
   $force = WP_CLI\Utils\get_flag_value($assoc_args, 'force', false);
@@ -69,19 +71,23 @@ $do_sync = function($args, $assoc_args) {
   // Remove dump file
   unlink($sqlfile);
 
-  $ssh = rtrim($aliasses[$env]['ssh'], '/');
-  $uploads = wp_upload_dir();
-  $upload_full_path = $uploads['basedir'];
-  $upload_rel_path = trim($uploads['relative'], '/');
+  if ($sync_uploads) {
 
-  // rsync needs a fully qualified remote path with a colon before the path.
-  $ssh = preg_replace('/\//', ':/', $ssh, 1);
+    $ssh = rtrim($aliasses[$env]['ssh'], '/');
+    $uploads = wp_upload_dir();
+    $upload_full_path = $uploads['basedir'];
+    $upload_rel_path = trim($uploads['relative'], '/');
 
-  $cmd = "rsync -av --delete $ssh/$upload_rel_path/ \"$upload_full_path\"";
-  
-  // Transfer all uploaded files
-  WP_CLI::log('- Transfering uploads folder.');
-  passthru($cmd);
+    // rsync needs a fully qualified remote path with a colon before the path.
+    $ssh = preg_replace('/\//', ':/', $ssh, 1);
+
+    $cmd = "rsync -av --delete $ssh/$upload_rel_path/ \"$upload_full_path\"";
+    
+    // Transfer all uploaded files
+    WP_CLI::log('- Transfering uploads folder.');
+    passthru($cmd);
+
+  }
 
 	WP_CLI::success( "Sync complete." );
 };
