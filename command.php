@@ -14,6 +14,7 @@ $do_sync = function($args, $assoc_args) {
   try {
     $env = WP_CLI\Utils\get_flag_value($assoc_args, 'env');
     $sync_uploads = WP_CLI\Utils\get_flag_value($assoc_args, 'uploads', true);
+    $sync_users = WP_CLI\Utils\get_flag_value($assoc_args, 'users', false);
 
     $cwd = getcwd();
     $sqlfile = $cwd . '/sync.sql';
@@ -53,8 +54,8 @@ $do_sync = function($args, $assoc_args) {
     // Generate table names with the correct prefix.
     // @NOTE: Remote and local prefix should match!!!
     $dbprefix = WP_CLI::runcommand('db prefix', ['return' => true]);
-    $table_users = $dbprefix . 'users';
-    $table_usermeta = $dbprefix . 'usermeta';
+    // $table_users = $dbprefix . 'users';
+    // $table_usermeta = $dbprefix . 'usermeta';
     $table_posts = $dbprefix . 'posts';
     $table_postmeta = $dbprefix . 'postmeta';
 
@@ -62,9 +63,23 @@ $do_sync = function($args, $assoc_args) {
     WP_CLI::log('- Deleting transients.');
     WP_CLI::runcommand("$env transient delete --all");
 
+    $exclude_tables = [];
+    $exclude_string = '';
+
+    if (!$sync_users) {
+      $exclude_tables[] = 'users';
+      $exclude_tables[] = 'usermeta';
+    }
+
+    if (!empty($exclude_tables)) {
+      $exclude_string = '--exclude_tables=' . implode(',', array_map(function($t) use ($dbprefix) { 
+        return $dbprefix . $t;
+      }, $exclude_tables));
+    }
+
     // Export DB on remote server.
     WP_CLI::log('- Exporting database.');
-    WP_CLI::runcommand("$env db export --exclude_tables={$table_users},{$table_usermeta} - > \"$sqlfile\"");
+    WP_CLI::runcommand("$env db export $exclude_string - > \"$sqlfile\"");
 
     // Import into local DB
     WP_CLI::log('- Importing database.');
