@@ -1,9 +1,20 @@
 maneuver-agency/wp-cli-sync
 ===========================
 
-Will copy database (ignores Ninja Forms input data) and uploaded files.
+Will copy database and uploaded files.
 
-Quick links: [Using](#using) | [Installing](#installing) | [Contributing](#contributing) | [Support](#support)
+Quick links: [Installing](#installing) | [Using](#using) | [Plugin Integrations](#plugin-integrations) | [Contributing](#contributing) | [Support](#support)
+
+## Installing
+
+Make sure WP-CLI is installed on the remote server and you have SSH access.  
+Rsync needs to be installed to transfer the uploads folder.
+
+Installing this package requires WP-CLI v1.5.0 or greater. Update to the latest stable release with `wp cli update`.
+
+Once you've done so, you can install this package with:
+
+    wp package install git@github.com:maneuver-agency/wp-cli-sync.git
 
 ## Using
 
@@ -31,16 +42,27 @@ or
 
 Use the --force attribute to bypass the confirmation prompt.
 
-## Installing
+### Uploads
 
-Make sure WP-CLI is installed on the remote server and you have SSH access.  
-Rsync needs to be installed to transfer the uploads folder.
+The uploads folder is synced by default. You can ignore it with:
 
-Installing this package requires WP-CLI v1.5.0 or greater. Update to the latest stable release with `wp cli update`.
+    wp sync --env=production --no-uploads
 
-Once you've done so, you can install this package with:
+### Users
 
-    wp package install git@github.com:maneuver-agency/wp-cli-sync.git
+User data is not synced by default. Having all this data on many local machines wouldn't be a good idea considering privacy laws.
+
+Include user data with:
+
+    wp sync --env=production --users
+
+## Plugin Integrations
+
+### Ninja Forms
+
+All Ninja Forms subscriptions will be removed from the export. Syncing sensitive information of visitors to your local machine is not recommended.
+
+There's no switch.
 
 ## Contributing
 
