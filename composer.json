@@ -11,9 +11,9 @@
         "files": [ "command.php" ]
     },
     "require": {
-        "wp-cli/wp-cli": "^1.1.0"
     },
     "require-dev": {
+        "wp-cli/wp-cli": "*",
         "behat/behat": "~2.5"
     }
 }
