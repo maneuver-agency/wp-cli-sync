@@ -35,8 +35,8 @@ $do_sync = function($args, $assoc_args) {
     if (!isset($aliasses[$env]['url'])) {
       WP_CLI::error( "The $env environment doesn't have a 'url' setting in your WP-CLI config." );
     }
-    if (!isset($aliasses[$env]['ssh'])) {
-      WP_CLI::error( "The $env environment doesn't have a 'ssh' setting in your WP-CLI config." );
+    if (!isset($aliasses[$env]['ssh']) && !isset($aliasses[$env]['path'])) {
+      WP_CLI::error( "The $env environment doesn't have a 'ssh' of 'path' setting in your WP-CLI config." );
     }
 
     $localdomain = WP_CLI::runcommand("option get home", ['return' => true]);
